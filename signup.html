@@ -35,7 +35,11 @@
             </div>
 
             <!-- Turnstile Widget Container -->
-            <div class="cf-turnstile" data-sitekey="your-site-key" data-theme="light"></div>
+            <div class="cf-turnstile" 
+                data-sitekey="0x4AAAAAAAyPW0WrShoxyuG6"  <!-- استبدل بمفتاح موقعك الفعلي -->
+                data-theme="light" 
+                data-language="en">
+            </div>
             <div id="turnstile-container"></div>
 
             <div class="btn-group">
@@ -49,7 +53,9 @@
         // Render Turnstile widget when the page loads
         function onloadTurnstileCallback() {
             turnstile.render('#turnstile-container', {
-                sitekey: '0x4AAAAAAAyPW0WrShoxyuG6', // Replace with your actual site key
+                sitekey: '0x4AAAAAAAyPW0WrShoxyuG6', // استبدل بمفتاح الموقع
+                theme: 'light', // اضبط على الوضع الفاتح
+                language: 'en', // اضبط على اللغة الإنجليزية
                 callback: function(token) {
                     console.log(`Turnstile challenge success: ${token}`);
                 }
