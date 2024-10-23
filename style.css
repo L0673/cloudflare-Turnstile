@@ -1,5 +1,5 @@
 .site-header {
-    color: #fff;
+    color: #000000;
     padding: 20px 0;
     position: fixed;
     width: 100%;
@@ -15,7 +15,7 @@
 body {
     font-family: 'Arial', sans-serif;
     height: 100vh;
-    background: linear-gradient(120deg, #84fab0, #8fd3f4);
+    background: linear-gradient(120deg, #195830, #8fd3f4);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -27,7 +27,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     width: 300px;
-    text-align: center;
+    text-align: left;
 }
 
 .input-group {
@@ -79,12 +79,12 @@ button:hover {
 }
 
 .signup-container {
-    background: #ffffff;
+    background: (120deg, #abc9d8, #2d523b, #fabbe7);
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     width: 300px;
-    text-align: center;
+    text-align: left;
     margin: auto;
 }
 .error-message {
