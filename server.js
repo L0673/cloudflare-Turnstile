@@ -1,89 +1,67 @@
 const express = require("express");
 const app = express();
+const fetch = require('node-fetch'); // Make sure to install node-fetch: npm install node-fetch
 const port = 3000;
-
 const database = require("./database/database.js"); 
+
 app.use(express.static('public'));
 
-app.get('/login', (req, res) => {
+// Handle login route with Turnstile validation
+app.get('/login', async (req, res) => {
+    const { username, password, 'cf-turnstile-response': turnstileToken } = req.query;
 
-  // getting the username and password from the query string
-  const { username, password } = req.query;
-  const user = {
-    username : username,
-    password : password
-  }
-  // databe call to authenticate user
-  database.authenticate(user)
-  .then((result) => {
-    console.log(result);
-    if(result.length > 0){
-      res.json(result);
+    if (!turnstileToken) {
+        return res.status(400).send('Turnstile token missing');
     }
-    else{
-      res.status(401).redirect('/?error=true');
-   
+
+    // Verify the Turnstile token with Cloudflare
+    const secretKey = '0x4AAAAAAAyPW0ZlI4Ltxv2qhTdXwdsm5uw'; // Replace with your actual secret key
+    const verificationUrl = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+    
+    const formData = new URLSearchParams();
+    formData.append('secret', secretKey);
+    formData.append('response', turnstileToken);
+
+    const verifyResponse = await fetch(verificationUrl, {
+        method: 'POST',
+        body: formData
+    });
+
+    const verifyResult = await verifyResponse.json();
+
+    if (!verifyResult.success) {
+        return res.status(401).redirect('/?error=true');
     }
-  }
-  )
+
+    // Validate username and password with your database
+    const user = { username, password };
+    database.authenticate(user)
+    .then((result) => {
+        if (result.length > 0) {
+            res.json(result);  // Successful login
+        } else {
+            res.status(401).redirect('/?error=true');  // Authentication failed
+        }
+    })
+    .catch(err => res.status(500).send('Server error'));
 });
 
-
-
-
-
-
-const token = form.data['cf-turnstile-response']; // الحصول على التوكن من النموذج
-const cfFormData = new FormData();
-
-// إضافة المفاتيح إلى FormData
-cfFormData.append('secret', '0x4AAAAAAAyPW0ZlI4Ltxv2qhTdXwdsm5uwy'); // استبدل 'your-secret-key' بمفتاحك السري الفعلي
-cfFormData.append('response', token);
-
-const url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'; // رابط التحقق
-
-// إرسال طلب التحقق إلى Cloudflare
-const result = await fetch(url, {
-  body: cfFormData,
-  method: 'POST'
-});
-
-// الحصول على الاستجابة من Cloudflare
-const outcome = await result.json();
-
-// التحقق من نجاح أو فشل التوكن
-if (!outcome.success) {
-  throw new Error('Cloudflare JS was not completed correctly!'); // رمي خطأ في حال فشل التحقق
-}
-
-
-
-
-
+// Signup route
 app.get('/submitSignup', (req, res) => {
+    const { username, password } = req.query;
+    const user = { username, password };
 
-  // getting the username and password from the query string
-  const { username, password } = req.query;
-  const user = {
-    username : username,
-    password : password
-  }
-
-  // databe call to create user
-  database.signup(user)
-  .then((result) => {
-    if(result){
-      res.json("user created! please login");
-    }
-    else{
-      res.redirect('/signup?error=true');
-    }
-  }
-  )
+    database.signup(user)
+    .then((result) => {
+        if (result) {
+            res.json("User created! Please login.");
+        } else {
+            res.redirect('/signup?error=true');
+        }
+    })
+    .catch(err => res.status(500).send('Server error'));
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+    console.log(`Example app listening at http://localhost:${port}`);
 });
-
-
