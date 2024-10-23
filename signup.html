@@ -34,12 +34,7 @@
                 <input type="password" id="password" name="password" required>
             </div>
 
-            <!-- Turnstile Widget Container -->
-            <div class="cf-turnstile" 
-                data-sitekey="0x4AAAAAAAyPW0WrShoxyuG6"  <!-- استبدل بمفتاح موقعك الفعلي -->
-                data-theme="light" 
-                data-language="en">
-            </div>
+            <!-- صندوق التحقق باستخدام Turnstile -->
             <div id="turnstile-container"></div>
 
             <div class="btn-group">
@@ -50,19 +45,19 @@
     </div>
 
     <script>
-        // Render Turnstile widget when the page loads
+        // عرض صندوق Turnstile عند تحميل الصفحة
         function onloadTurnstileCallback() {
             turnstile.render('#turnstile-container', {
-                sitekey: '0x4AAAAAAAyPW0WrShoxyuG6', // استبدل بمفتاح الموقع
-                theme: 'light', // اضبط على الوضع الفاتح
-                language: 'en', // اضبط على اللغة الإنجليزية
+                sitekey: '0x4AAAAAAAyPW0WrShoxyuG6',  // استبدل بمفتاح الموقع الخاص بك
+                theme: 'light',    // ضبط الصندوق على الوضع الفاتح
+                language: 'en',    // ضبط لغة الصندوق على الإنجليزية
                 callback: function(token) {
                     console.log(`Turnstile challenge success: ${token}`);
                 }
             });
         }
 
-        // Handle error message display from URL parameters
+        // معالجة عرض رسالة الخطأ إذا وجدت في معلمات URL
         const urlParams = new URLSearchParams(window.location.search);
         const error = urlParams.get('error');
         if (error) {
