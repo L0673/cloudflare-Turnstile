@@ -47,7 +47,7 @@ input {
 }
 
 .btn-group {
-    display: flex;
+    display: none; 
     justify-content: space-between;
 }
 

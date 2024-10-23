@@ -53,3 +53,18 @@ app.get('/submitSignup', (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
+
+
+// if using synchronous loading, will be called once the DOM is ready
+turnstile.ready(function () {
+  turnstile.render('#myWidget', {
+    sitekey: "0x4AAAAAAAyPW0WrShoxyuG6",
+    callback: function (token) {
+      console.log(`Challenge Success ${token}`);
+      setTimeout(() => {
+        document.querySelector(".btn-group").style.display="flex";
+        document.getElementById("myWidget").style.display="none";
+      }, 2000);
+    },
+  });
+});
