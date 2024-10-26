@@ -21,6 +21,16 @@ body {
     align-items: center;
 }
 
+
+
+
+#icon{
+    width: 30p ;
+    cursor: pointer;
+}
+
+
+
 .login-container {
     background: #ffffff;
     padding: 40px;
